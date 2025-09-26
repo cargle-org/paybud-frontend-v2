@@ -1,0 +1,46 @@
+import React, { ComponentProps } from "react";
+import { cn } from "../utils/misc";
+import { TbArrowBackUp, TbCancel } from "react-icons/tb";
+
+export interface FormInputProps extends ComponentProps<"input"> {
+  name: string;
+  label?: string;
+  error?: string;
+  isLoading?: string;
+  optional?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  isDirty?: boolean;
+}
+
+const FormText = (props: FormInputProps) => {
+  const { name, label, error, optional, leftIcon, isDirty, className, ...rest } = props;
+  return (
+    <div className={cn(isDirty && !error && " bg-yellow-95", " p-1.5 relative")}>
+      {label && (
+        <label className=" text-sm text-gray-20 font-semibold" htmlFor={name}>
+          {label}
+        </label>
+      )}
+      {isDirty && !error && <TbArrowBackUp size={18} className="absolute top-1 right-1.5 text-electric-blue-40" />}
+
+      <div className="relative">
+        {error && <TbCancel size={18} className=" text-pink-50 absolute left-2.5 top-1/2 transform -translate-y-1/2" />}
+        <input
+          id={name}
+          name={name}
+          type="text"
+          className={cn(
+            " bg-white placeholder:text-gray-40 text-gray-20 rounded-lg border border-gray-40 w-full px-2 py-1.5 text-sm focus:ring-2 focus:ring-offset-1 focus:ring-blue-15 focus:outline-none disabled:border-gray-40 disabled:bg-gray-95",
+            error && "pl-8 bg-pink-90 border-pink-40",
+            className
+          )}
+          {...rest}
+        />
+      </div>
+      {error && <span className=" text-xs text-pink-40">{error}</span>}
+    </div>
+  );
+};
+
+export default FormText;

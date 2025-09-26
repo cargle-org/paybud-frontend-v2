@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@repo/ui/styles.css";
+import NextTopLoader from "nextjs-toploader";
+import localFont from "next/font/local";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,6 +14,57 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// const sfProDisplayFont = localFont({
+//   src: [
+//     {
+//       path: "../assets/fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF",
+//       weight: "400",
+//       style: "normal",
+//     },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF",
+//     //   weight: "500",
+//     //   style: "normal",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYBOLD.OTF",
+//     //   weight: "700",
+//     //   style: "normal",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYLIGHTITALIC.OTF",
+//     //   weight: "300",
+//     //   style: "italic",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYSEMIBOLDITALIC.OTF",
+//     //   weight: "600",
+//     //   style: "italic",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYHEAVYITALIC.OTF",
+//     //   weight: "800",
+//     //   style: "italic",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYBLACKITALIC.OTF",
+//     //   weight: "900",
+//     //   style: "italic",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYTHINITALIC.OTF",
+//     //   weight: "100",
+//     //   style: "italic",
+//     // },
+//     // {
+//     //   path: "../assets/fonts/sf-pro-display/SFPRODISPLAYULTRALIGHTITALIC.OTF",
+//     //   weight: "200",
+//     //   style: "italic",
+//     // },
+//   ],
+//   variable: "--font-sf-pro-display",
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,7 +78,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-95`}>
+        <NextTopLoader
+          color="#078D61"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={4}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+          zIndex={1600}
+          showAtBottom={false}
+        />
+        {children}
+      </body>
     </html>
   );
 }
