@@ -9,8 +9,8 @@ const AuthLayout = ({
 }>) => {
   return (
     <div className=" w-screen h-screen flex">
-      <div className=" w-full  lg:!w-1/2 h-full flex items-center justify-center shrink-0 relative">
-        <div className=" w-full max-w-96 mx-auto flex flex-col gap-10 items-center">
+      <div className=" w-full  lg:!w-1/2 h-full flex items-center justify-center shrink-0 relative p-10">
+        <div className=" w-full max-w-96 mx-auto flex flex-col gap-5 items-center min-h-[720px] ">
           <Image height={362} width={1062} src={"/images/logo.png"} alt="logo" className="w-40" />
           {children}
         </div>

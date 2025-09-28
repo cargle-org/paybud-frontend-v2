@@ -1,14 +1,31 @@
 "use client";
-import { AppStore, makeStore } from "@/libs/store";
-import { useRef } from "react";
-import { Provider } from "react-redux";
+import { createBaseStore } from "@/store/store";
+import { type ReactNode, createContext, useRef, useState, useEffect } from "react";
 
-export default function StoreProvider({ children }: { children: React.ReactNode }) {
-  const storeRef = useRef<AppStore>(undefined);
+export type StoreApi = ReturnType<typeof createBaseStore>;
+
+export const StoreContext = createContext<StoreApi | undefined>(undefined);
+
+export interface ICounterStoreProvider {
+  children: ReactNode;
+}
+
+export const StoreProvider = ({ children }: ICounterStoreProvider) => {
+  const storeRef = useRef<StoreApi>(null);
+
+  const result = createBaseStore();
+  const [data, setData] = useState<StoreApi>();
+
+  useEffect(() => {
+    setData(result);
+  }, []);
+
+  if (!data) return null;
+
   if (!storeRef.current) {
-    // Create the store instance the first time this renders
-    storeRef.current = makeStore();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    storeRef.current = createBaseStore();
   }
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
-}
+  return <StoreContext.Provider value={storeRef.current}>{children}</StoreContext.Provider>;
+};

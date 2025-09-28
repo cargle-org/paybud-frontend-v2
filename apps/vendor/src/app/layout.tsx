@@ -4,6 +4,7 @@ import "./globals.css";
 import "@repo/ui/styles.css";
 import NextTopLoader from "nextjs-toploader";
 import localFont from "next/font/local";
+import AppProvider from "@/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -80,7 +81,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-95`}>
         <NextTopLoader
-          color="#078D61"
+          color="#0B5CAB"
           initialPosition={0.08}
           crawlSpeed={200}
           height={4}
@@ -88,11 +89,11 @@ export default function RootLayout({
           showSpinner={false}
           easing="ease"
           speed={200}
-          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+          shadow="0 0 10px #AACBFF,0 0 5px #AACBFF"
           zIndex={1600}
           showAtBottom={false}
         />
-        {children}
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

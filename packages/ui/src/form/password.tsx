@@ -1,6 +1,6 @@
 import React, { ComponentProps, useState } from "react";
 import { cn } from "../utils/misc";
-import { TbArrowBackUp, TbCancel, TbEye, TbEyeClosed } from "react-icons/tb";
+import { IoBan, IoEye, IoEyeOff, IoReturnUpBack } from "react-icons/io5";
 
 export interface FormInputProps extends ComponentProps<"input"> {
   name: string;
@@ -23,10 +23,10 @@ const FormPassword = (props: FormInputProps) => {
           {label}
         </label>
       )}
-      {isDirty && !error && <TbArrowBackUp size={18} className="absolute top-1 right-1.5 text-electric-blue-40" />}
+      {isDirty && !error && <IoReturnUpBack size={18} className="absolute top-1 right-1.5 text-electric-blue-40" />}
 
       <div className="relative">
-        {error && <TbCancel size={18} className=" text-pink-50 absolute left-2.5 top-1/2 transform -translate-y-1/2" />}
+        {error && <IoBan size={18} className=" text-pink-50 absolute left-2.5 top-1/2 transform -translate-y-1/2" />}
         <input
           id={name}
           name={name}
@@ -39,9 +39,17 @@ const FormPassword = (props: FormInputProps) => {
           type={showText ? "text" : "password"}
         />
         {showText ? (
-          <TbEye onClick={() => setShowText(!showText)} className="text-gray-40 absolute right-2.5 top-1/2 transform -translate-y-1/2" />
+          <IoEye
+            role="button"
+            onClick={() => setShowText(!showText)}
+            className="text-gray-40 absolute right-2.5 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          />
         ) : (
-          <TbEyeClosed onClick={() => setShowText(!showText)} className="text-gray-50 absolute right-2.5 top-1/2 transform -translate-y-1/2" />
+          <IoEyeOff
+            role="button"
+            onClick={() => setShowText(!showText)}
+            className="text-gray-50 absolute right-2.5 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          />
         )}
       </div>
       {error && <span className=" text-xs text-pink-40">{error}</span>}

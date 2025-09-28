@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
 import { cn } from "../utils/misc";
-import { TbArrowBackUp, TbCancel } from "react-icons/tb";
+import { IoBan, IoReturnUpBack } from "react-icons/io5";
 
 export interface FormInputProps extends ComponentProps<"input"> {
   name: string;
@@ -22,10 +22,10 @@ const FormText = (props: FormInputProps) => {
           {label}
         </label>
       )}
-      {isDirty && !error && <TbArrowBackUp size={18} className="absolute top-1 right-1.5 text-electric-blue-40" />}
+      {isDirty && !error && <IoReturnUpBack size={18} className="absolute top-1 right-1.5 text-electric-blue-40" />}
 
       <div className="relative">
-        {error && <TbCancel size={18} className=" text-pink-50 absolute left-2.5 top-1/2 transform -translate-y-1/2" />}
+        {error && <IoBan size={18} className=" text-pink-50 absolute left-2.5 top-1/2 transform -translate-y-1/2" />}
         <input
           id={name}
           name={name}
