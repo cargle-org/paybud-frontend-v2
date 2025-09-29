@@ -1,9 +1,13 @@
 "use client";
+import useToast from "@/context/toast";
+import authService from "@/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormPassword from "@repo/ui/form/password";
 import FormSubmit from "@repo/ui/form/submit";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/dist/client/link";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -27,9 +31,29 @@ const resetPasswordSchema = z
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 const ResetPasswordPage = () => {
+  const router = useRouter();
+  const { openToast } = useToast();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get("token") ? decodeURIComponent(searchParams.get("token")!) : null;
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: authService.resetPassword,
+    onSuccess: (data) => {
+      openToast({
+        type: "success",
+        message: "Password reset successful",
+        description: data.message,
+      });
+      router.push("/auth/login");
+    },
+    onError: (error: any) => {
+      openToast({
+        type: "error",
+        message: "Failed to reset password",
+        description: error?.response?.data?.message || error.message,
+      });
+    },
+  });
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -38,7 +62,9 @@ const ResetPasswordPage = () => {
     },
   });
 
-  function onSubmit(data: ResetPasswordFormValues) {}
+  function onSubmit(data: ResetPasswordFormValues) {
+    resetPasswordMutation.mutate({ token: token!, password: data.password });
+  }
 
   return (
     <div className="w-full ">

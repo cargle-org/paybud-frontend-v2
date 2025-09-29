@@ -7,6 +7,9 @@ import FormText from "@repo/ui/form/text";
 import FormSubmit from "@repo/ui/form/submit";
 import Link from "next/dist/client/link";
 import { is } from "zod/locales";
+import { useMutation } from "@tanstack/react-query";
+import authService from "@/services/auth.service";
+import useToast from "@/context/toast";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -15,8 +18,29 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPasswordPage = () => {
+  const { openToast } = useToast();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+
+  const forgotPasswordMutation = useMutation({
+    mutationFn: authService.forgotPassword,
+    onSuccess: (data) => {
+      openToast({
+        type: "success",
+        message: "Password reset link sent",
+        description: data.message,
+      });
+      setIsSubmitted(true);
+      setTimeLeft(60); // Reset the timer
+    },
+    onError: (error: any) => {
+      openToast({
+        type: "error",
+        message: "Failed to send password reset link",
+        description: error?.response?.data?.message || error.message,
+      });
+    },
+  });
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -35,7 +59,7 @@ const ForgotPasswordPage = () => {
     },
   });
   function onSubmit(data: ForgotPasswordValues) {
-    setIsSubmitted(true);
+    forgotPasswordMutation.mutate(data.email);
     setTimeLeft(60);
   }
 

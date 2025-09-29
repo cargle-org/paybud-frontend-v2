@@ -16,6 +16,7 @@ import authService from "@/services/auth.service";
 import { useBaseStore } from "@/store/hook";
 import { useRouter } from "nextjs-toploader/app";
 import useToast from "@/context/toast";
+import { AxiosError } from "axios";
 
 const loginSchema = z.object({
   email: z.email("Invalid email address"),
@@ -52,7 +53,8 @@ const LoginPage = () => {
         description: "You have been logged in successfully.",
       });
       if (!data?.data?.user.isEmailVerified) {
-        router.push("/auth/verify-email");
+        const email = encodeURIComponent(data?.data?.user.email || "");
+        router.push(`/auth/verify-email?email=${email}&isLogin=true`);
         return;
       }
       setAccessToken(data?.data?.accessToken);
@@ -61,65 +63,50 @@ const LoginPage = () => {
 
       console.log("Login successful:", data);
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: AxiosError<any>) => {
+      console.log(error.response?.data.message as string);
       openToast({
         type: "error",
-        message: "Login failed",
+        message: error.response?.data.message || "Login failed",
       });
     },
   });
 
-  const googleLoginMutation = useMutation({
+  const googleLogin = useMutation({
     mutationFn: authService.googleLogin,
     onSuccess: (data) => {
       openToast({
         type: "success",
-        message: data.message || "Login successful",
-        description: "You have been logged in successfully.",
+        message: "Registration successful",
+        description: data.message,
       });
-      if (!data?.data?.user.isEmailVerified) {
-        router.push("/auth/verify-email");
-        return;
-      }
-      setAccessToken(data?.data?.accessToken);
-      setUser(data?.data?.user);
-      // router.push("/");
-
-      console.log("Login successful:", data);
+      setAccessToken(data?.data?.accessToken!);
+      router.push("/onboarding");
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: AxiosError<any>) => {
       openToast({
         type: "error",
-        message: "Login failed",
+        message: "Registration failed",
+        description: error.response?.data.message as string,
       });
     },
   });
-
-  const facebookLoginMutation = useMutation({
+  const facebookLogin = useMutation({
     mutationFn: authService.facebookLogin,
     onSuccess: (data) => {
       openToast({
         type: "success",
-        message: data.message || "Login successful",
-        description: "You have been logged in successfully.",
+        message: "Registration successful",
+        description: data.message,
       });
-      if (!data?.data?.user.isEmailVerified) {
-        router.push("/auth/verify-email");
-        return;
-      }
-      setAccessToken(data?.data?.accessToken);
-      setUser(data?.data?.user);
-      // router.push("/");
-
-      console.log("Login successful:", data);
+      setAccessToken(data?.data?.accessToken!);
+      router.push("/onboarding");
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: AxiosError<any>) => {
       openToast({
         type: "error",
-        message: "Login failed",
+        message: "Registration failed",
+        description: error.response?.data.message as string,
       });
     },
   });
@@ -151,18 +138,18 @@ const LoginPage = () => {
           </form>
           <div className=" flex items-center justify-between">
             <FormCheckBox {...form.register("rememberMe")} name="rememberMe" label="Remember Me" />
-            <Link href="/auth/forgot-password" className="  text-blue-50  text-xs p-1.5">
+            <Link href="/auth/forgot-password" className="  text-blue-50 font-semibold text-xs p-1.5">
               Forgot Password?
             </Link>
           </div>
           <Seperator label="or" className="" />
           <div className="">
             <GoogleButton
-              handleLogin={(token) => googleLoginMutation.mutate(token)}
+              handleLogin={(token) => googleLogin.mutate(token)}
               handleError={() => openToast({ type: "error", message: "Google login failed" })}
             />
             <FacebookButton
-              handleLogin={(token) => facebookLoginMutation.mutate(token)}
+              handleLogin={(token) => facebookLogin.mutate(token)}
               handleError={() => openToast({ type: "error", message: "Facebook login failed" })}
             />
           </div>

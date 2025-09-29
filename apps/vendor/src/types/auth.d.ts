@@ -13,8 +13,7 @@ export interface IOAuthLoginPayLoad {
 export interface IRegisterPayLoad {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   roleName?: string;
 }
 

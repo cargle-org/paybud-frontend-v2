@@ -10,6 +10,12 @@ import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useMutation } from "@tanstack/react-query";
+import authService from "@/services/auth.service";
+import { AxiosError } from "axios";
+import useToast from "@/context/toast";
+import { useRouter } from "nextjs-toploader/app";
+import { useBaseStore } from "@/store/hook";
 
 const signUpSchema = z
   .object({
@@ -32,6 +38,9 @@ const signUpSchema = z
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const RegisterPage = () => {
+  const { setAccessToken } = useBaseStore((state) => state);
+  const router = useRouter();
+  const { openToast } = useToast();
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -42,7 +51,72 @@ const RegisterPage = () => {
     },
   });
 
-  function onSubmit(data: SignUpFormValues) {}
+  const registerMutation = useMutation({
+    mutationFn: authService.register,
+    onSuccess: (data) => {
+      openToast({
+        type: "success",
+        message: "Registration successful",
+        description: data.message,
+      });
+      if (data?.data && !data?.data?.isEmailVerified) {
+        const email = encodeURIComponent(data?.data?.email || "");
+        router.push(`/auth/verify-email?email=${email}`);
+        return;
+      }
+      router.push("/onboarding");
+    },
+    onError: (error: AxiosError<any>) => {
+      openToast({
+        type: "error",
+        message: "Registration failed",
+        description: error.response?.data.message as string,
+      });
+    },
+  });
+
+  const googleLogin = useMutation({
+    mutationFn: authService.googleLogin,
+    onSuccess: (data) => {
+      openToast({
+        type: "success",
+        message: "Registration successful",
+        description: data.message,
+      });
+      setAccessToken(data?.data?.accessToken!);
+      router.push("/onboarding");
+    },
+    onError: (error: AxiosError<any>) => {
+      openToast({
+        type: "error",
+        message: "Registration failed",
+        description: error.response?.data.message as string,
+      });
+    },
+  });
+  const facebookLogin = useMutation({
+    mutationFn: authService.facebookLogin,
+    onSuccess: (data) => {
+      openToast({
+        type: "success",
+        message: "Registration successful",
+        description: data.message,
+      });
+      setAccessToken(data?.data?.accessToken!);
+      router.push("/onboarding");
+    },
+    onError: (error: AxiosError<any>) => {
+      openToast({
+        type: "error",
+        message: "Registration failed",
+        description: error.response?.data.message as string,
+      });
+    },
+  });
+
+  function onSubmit(data: SignUpFormValues) {
+    registerMutation.mutate(data);
+  }
   return (
     <div className="w-full ">
       <div className=" rounded-sm border border-gray-95 p-5 bg-white">
@@ -80,8 +154,26 @@ const RegisterPage = () => {
           </form>
           <Seperator label="or" className="" />
           <div className="">
-            <GoogleButton disabled text="Register with Google" />
-            <FacebookButton disabled text="Register with Facebook" />
+            <GoogleButton
+              handleError={() =>
+                openToast({
+                  message: "Google Login Failed",
+                  type: "error",
+                })
+              }
+              handleLogin={(token) => googleLogin.mutate(token)}
+              text="Register with Google"
+            />
+            <FacebookButton
+              handleError={() =>
+                openToast({
+                  message: "Facebook Login Failed",
+                  type: "error",
+                })
+              }
+              handleLogin={(token) => facebookLogin.mutate(token)}
+              text="Register with Facebook"
+            />
           </div>
         </div>
       </div>
