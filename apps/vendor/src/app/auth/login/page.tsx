@@ -17,6 +17,7 @@ import { useBaseStore } from "@/store/hook";
 import { useRouter } from "nextjs-toploader/app";
 import useToast from "@/context/toast";
 import { AxiosError } from "axios";
+import { useSearchParams } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.email("Invalid email address"),
@@ -34,6 +35,8 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
   const { openToast } = useToast();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") ? decodeURIComponent(searchParams.get("redirect")!) : null;
   const router = useRouter();
   const { setAccessToken, setUser } = useBaseStore((state) => state);
   const form = useForm<LoginFormValues>({
@@ -58,10 +61,15 @@ const LoginPage = () => {
         return;
       }
       setAccessToken(data?.data?.accessToken);
-      setUser(data?.data?.user);
-      // router.push("/");
-
-      console.log("Login successful:", data);
+      if (data.data?.user.business && data.data?.user.business?.isVerified) {
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        router.push("/onboarding");
+      }
     },
     onError: (error: AxiosError<any>) => {
       console.log(error.response?.data.message as string);
@@ -81,7 +89,15 @@ const LoginPage = () => {
         description: data.message,
       });
       setAccessToken(data?.data?.accessToken!);
-      router.push("/onboarding");
+      if (data.data?.user.business && data.data?.user.business?.isVerified) {
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        router.push("/onboarding");
+      }
     },
     onError: (error: AxiosError<any>) => {
       openToast({
@@ -100,7 +116,15 @@ const LoginPage = () => {
         description: data.message,
       });
       setAccessToken(data?.data?.accessToken!);
-      router.push("/onboarding");
+      if (data.data?.user.business && data.data?.user.business?.isVerified) {
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        router.push("/onboarding");
+      }
     },
     onError: (error: AxiosError<any>) => {
       openToast({
@@ -117,7 +141,7 @@ const LoginPage = () => {
 
   return (
     <div className="w-full ">
-      <div className=" rounded border border-gray-95 p-5 bg-white">
+      <div className=" rounded-lg border border-gray-95 p-5 bg-white">
         <div className="">
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
             <FormText

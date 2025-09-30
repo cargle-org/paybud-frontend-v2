@@ -83,7 +83,7 @@ export function GoogleButton({ isLoading, className, handleLogin, handleError, t
   const handleGoogleLogin = () => {
     if (window.google) {
       //   window.google.accounts.id.prompt();
-      console.log(document.getElementById("googleButton"));
+      // console.log(document.getElementById("googleButton"));
       const button = document.querySelector('#googleButton [role="button"]') as HTMLElement;
       button?.click();
     }

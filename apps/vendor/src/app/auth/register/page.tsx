@@ -84,7 +84,11 @@ const RegisterPage = () => {
         description: data.message,
       });
       setAccessToken(data?.data?.accessToken!);
-      router.push("/onboarding");
+      if (data.data?.user.business && data.data?.user.business?.isVerified) {
+        router.push("/dashboard");
+      } else {
+        router.push("/onboarding");
+      }
     },
     onError: (error: AxiosError<any>) => {
       openToast({
@@ -103,7 +107,11 @@ const RegisterPage = () => {
         description: data.message,
       });
       setAccessToken(data?.data?.accessToken!);
-      router.push("/onboarding");
+      if (data.data?.user.business && data.data?.user.business?.isVerified) {
+        router.push("/dashboard");
+      } else {
+        router.push("/onboarding");
+      }
     },
     onError: (error: AxiosError<any>) => {
       openToast({

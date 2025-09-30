@@ -1,8 +1,7 @@
 import { redirect, RedirectType } from "next/navigation";
-import React from "react";
 
 const OnboardingPage = () => {
-  return redirect("/onboarding/business", RedirectType.replace);
+  return redirect("/onboarding/user", RedirectType.replace);
 };
 
 export default OnboardingPage;
