@@ -1,4 +1,5 @@
 "use client";
+import notificationService from "@/services/notification.service";
 import userService from "@/services/user.service";
 import { useBaseStore } from "@/store/hook";
 import { useQuery } from "@tanstack/react-query";
@@ -10,8 +11,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { accessToken, setUser } = useBaseStore((state) => state);
-
-  const { data, isSuccess, isError } = useQuery({
+  const { data, isSuccess, isError, error } = useQuery({
     queryKey: ["user"],
     queryFn: userService.getLoggedInUser,
     enabled: !!accessToken,
@@ -31,7 +31,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     if (isSuccess && data) {
       setUser(data.data!);
+      notificationService.connect();
+      notificationService.getNotifications({ userId: data.data?.id! });
     }
+
+    return () => {
+      notificationService.removeConnection();
+    };
   }, [isError, isSuccess, data]);
 
   return <>{children}</>;

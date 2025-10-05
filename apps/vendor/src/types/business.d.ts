@@ -65,4 +65,23 @@ export interface ICreateBusinessDTO {
   businessBankCode: string;
 
   businessBVN: string;
+
+  logoId?: string;
+}
+
+export interface IBanks {
+  name: string;
+  slug: string;
+  code: string;
+  longcode: string;
+  gateway: string | null;
+  pay_with_bank: boolean;
+  active: boolean;
+  is_deleted: boolean;
+  country: string;
+  currency: string;
+  type: string;
+  id: number;
+  createdAt: string;
+  updatedAt: string;
 }

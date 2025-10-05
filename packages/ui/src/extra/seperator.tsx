@@ -18,7 +18,14 @@ const Seperator = (props: SepratorProps) => {
           <span className=""></span>
         </div>
       ) : (
-        <div className={cn("h-px w-full relative bg-gray-80 ", spacing === "md" ? " my-4" : spacing === "sm" ? "my-3" : "", className)} {...rest}>
+        <div
+          className={cn(
+            "h-px w-full relative bg-gray-80 ",
+            spacing === "xl" ? " my-8" : spacing === "lg" ? "my-6" : spacing === "sm" ? "my-3" : "my-4",
+            className
+          )}
+          {...rest}
+        >
           {label && (
             <span
               className={cn(

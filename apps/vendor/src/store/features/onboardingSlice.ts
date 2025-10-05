@@ -1,18 +1,19 @@
 import { ICreateBusinessDTO } from "@/types/business";
-import { IUpdateUserDto } from "@/types/user";
+import { IUpdateUserPayload } from "@/types/user";
 import { StateCreator } from "zustand";
 
 export interface IOnboardingSlice {
   onboardingDetails: {
-    user: Partial<IUpdateUserDto>;
+    user: Partial<IUpdateUserPayload>;
     business: {
       profile: Partial<
         Pick<ICreateBusinessDTO, "name" | "businessEmail" | "address" | "businessPhone" | "contactEmail" | "contactPhoneNumber" | "description">
-      >;
+      > & { logo?: any };
       accountDetails: Partial<Pick<ICreateBusinessDTO, "businessAccountName" | "businessAccountNumber" | "businessBVN" | "businessBankCode">>;
     };
+    stage?: "user" | "business" | "success";
   };
-  setUserProfile: (user: Partial<IUpdateUserDto>) => void;
+  setUserProfile: (user: Partial<IUpdateUserPayload>) => void;
   setBusinessProfile: (
     profile: Partial<
       Pick<ICreateBusinessDTO, "name" | "businessEmail" | "address" | "businessPhone" | "contactEmail" | "contactPhoneNumber" | "description">
@@ -21,6 +22,7 @@ export interface IOnboardingSlice {
   setBusinessAccountDetails: (
     accountDetails: Partial<Pick<ICreateBusinessDTO, "businessAccountName" | "businessAccountNumber" | "businessBVN" | "businessBankCode">>
   ) => void;
+  setStage: (stage: "user" | "business" | "success") => void;
 }
 
 export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnboardingSlice> = (set, get) => ({
@@ -30,8 +32,9 @@ export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnbo
       profile: {},
       accountDetails: {},
     },
+    stage: "user",
   },
-  setUserProfile: (user: Partial<IUpdateUserDto>) =>
+  setUserProfile: (user: Partial<IUpdateUserPayload>) =>
     set((state) => ({
       onboardingDetails: {
         ...state.onboardingDetails,
@@ -41,11 +44,7 @@ export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnbo
         },
       },
     })),
-  setBusinessProfile: (
-    profile: Partial<
-      Pick<ICreateBusinessDTO, "name" | "businessEmail" | "address" | "businessPhone" | "contactEmail" | "contactPhoneNumber" | "description">
-    >
-  ) =>
+  setBusinessProfile: (profile) =>
     set((state) => ({
       onboardingDetails: {
         ...state.onboardingDetails,
@@ -61,9 +60,7 @@ export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnbo
         },
       },
     })),
-  setBusinessAccountDetails: (
-    accountDetails: Partial<Pick<ICreateBusinessDTO, "businessAccountName" | "businessAccountNumber" | "businessBVN" | "businessBankCode">>
-  ) =>
+  setBusinessAccountDetails: (accountDetails) =>
     set((state) => ({
       onboardingDetails: {
         ...state.onboardingDetails,
@@ -79,4 +76,13 @@ export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnbo
         },
       },
     })),
+  setStage: (stage) => {
+    set((state) => ({
+      ...state,
+      onboardingDetails: {
+        ...state.onboardingDetails,
+        stage: stage,
+      },
+    }));
+  },
 });

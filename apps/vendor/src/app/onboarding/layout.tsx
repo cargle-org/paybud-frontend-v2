@@ -19,7 +19,7 @@ const OnboardingLayout = ({
             </Link>
           </p>
         </div>
-        <div className=" hidden lg:block w-1/2 bg-green-500 shrink-0"></div>
+        <div className=" hidden lg:!block w-1/2 bg-green-500 shrink-0"></div>
       </div>
     </AuthProvider>
   );

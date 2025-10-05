@@ -1,8 +1,10 @@
 import { IDocument } from "./api";
 import { IBusiness } from "./business";
+import { IFile } from "./file";
 
 export interface IUser extends IDocument {
   email: string;
+  phoneNumber?: string;
   fullName: string;
   isEmailVerified: boolean;
   registrationType: "EMAIL";
@@ -13,16 +15,24 @@ export interface IUser extends IDocument {
 
 export interface IProfile {
   id: string;
-  profilePicture: string;
+  profilePicture?: IFile;
+  profilePictureUrl: string;
+  profilePictureId: string;
+  userName?: string;
+  contactEmail: string;
+  bio?: string;
+  dateOfBirth: Date;
+  contactPhoneNumber: string;
+  sex: "MALE" | "FEMALE" | "OTHER";
   createdAt: string;
   updatedAt: string;
 }
 
-export interface IUpdateUserDto {
+export interface IUpdateUserPayload {
   fullName: string;
   userName: string;
-  email: string;
-  phoneNumber: string;
+  contactEmail: string;
+  contactPhoneNumber: string;
   address?: string;
   dateOfBirth: Date;
   sex: "MALE" | "FEMALE" | "OTHER";

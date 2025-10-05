@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { cn } from "../utils/misc";
 import { IoBan, IoReturnUpBack } from "react-icons/io5";
 
-export interface FormInputProps extends ComponentProps<"input"> {
+export interface FormInputProps extends ComponentProps<"textarea"> {
   name: string;
   label?: string;
   error?: string;
@@ -13,8 +13,8 @@ export interface FormInputProps extends ComponentProps<"input"> {
   handleClickReturn?: () => void;
 }
 
-const FormText = (props: FormInputProps) => {
-  const { name, label, error, leftIcon, isDirty, className, ...rest } = props;
+const FormTextArea = (props: FormInputProps) => {
+  const { name, label, error, leftIcon, isDirty, className, rows = 8, ...rest } = props;
   return (
     <div className={cn(isDirty && !error && " bg-blue-95", " p-1.5 relative")}>
       {label && (
@@ -26,13 +26,13 @@ const FormText = (props: FormInputProps) => {
 
       <div className="relative">
         {error && <IoBan size={18} className=" text-pink-50 absolute left-2.5 top-1/2 transform -translate-y-1/2" />}
-        {leftIcon && !error && <div className=" absolute left-2.5 top-1/2 transform -translate-y-1/2">{leftIcon}</div>}
-        <input
+        {leftIcon && <div className=" absolute left-2.5 top-1/2 transform -translate-y-1/2">{leftIcon}</div>}
+        <textarea
+          rows={rows}
           id={name}
           name={name}
-          type="text"
           className={cn(
-            " bg-white placeholder:text-gray-40 text-gray-20 rounded-lg border border-gray-40 w-full px-2 py-1.5 text-sm focus:ring-2 focus:ring-offset-1 focus:ring-blue-15 focus:outline-none disabled:border-gray-40 disabled:bg-gray-95",
+            " bg-white placeholder:text-gray-40 text-gray-20 rounded-lg border border-gray-40 w-full px-2 py-1.5 text-sm focus:ring-2 focus:ring-offset-1 focus:ring-blue-15 focus:outline-none disabled:border-gray-40 disabled:bg-gray-95 resize-none",
             error && "pl-8 bg-pink-90 border-pink-40",
             leftIcon && "pl-8",
             className
@@ -45,4 +45,4 @@ const FormText = (props: FormInputProps) => {
   );
 };
 
-export default FormText;
+export default FormTextArea;

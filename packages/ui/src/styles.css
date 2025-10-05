@@ -1,3 +1,5 @@
 /* Component-level styles for the UI package */
+@import "react-datepicker/dist/react-datepicker.css";
+@import "react-phone-number-input/style.css";
 @import "tailwindcss";
 @import "@repo/tailwind-config";
