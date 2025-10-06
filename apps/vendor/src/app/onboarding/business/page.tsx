@@ -1,22 +1,17 @@
 "use client";
 
-import { redirect, RedirectType } from "next/navigation";
-import { useState } from "react";
+import { redirect, RedirectType, useSearchParams } from "next/navigation";
 import OnboardingProfileForm from "./components/profile-form";
 import OnboardingAccountDetailsForm from "./components/account-details-form";
 
 const OnboardingBusinessPage = () => {
-  const [stage, setStage] = useState<"profile" | "account-details">("profile");
+  const searchParams = useSearchParams();
+  const step = searchParams.get("step");
 
-  if (stage === "profile") {
-    return <OnboardingProfileForm onSubmit={() => setStage("account-details")} />;
-  }
-
-  if (stage === "account-details") {
+  if (step === "account-details") {
     return <OnboardingAccountDetailsForm />;
   }
-
-  return redirect("/onboarding", RedirectType.replace);
+  return <OnboardingProfileForm />;
 };
 
 export default OnboardingBusinessPage;

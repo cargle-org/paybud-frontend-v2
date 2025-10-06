@@ -12,6 +12,8 @@ import z from "zod";
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/utils/constants";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
+import BackButton from "@repo/ui/extra/back-button";
+import { useRouter } from "nextjs-toploader/app";
 
 const onboardingBusinessProfileSchema = z.object({
   logo: z
@@ -32,7 +34,8 @@ const onboardingBusinessProfileSchema = z.object({
 
 type OnboardingBusinessProfile = z.infer<typeof onboardingBusinessProfileSchema>;
 
-const OnboardingProfileForm = (props: { onSubmit: () => void }) => {
+const OnboardingProfileForm = () => {
+  const router = useRouter();
   const { openToast } = useToast();
   const { user, setBusinessProfile, setStage, onboardingDetails } = useBaseStore((state) => state);
 
@@ -56,11 +59,14 @@ const OnboardingProfileForm = (props: { onSubmit: () => void }) => {
 
   async function onSubmit(data: OnboardingBusinessProfile) {
     setBusinessProfile(data);
-    props.onSubmit();
+    router.push("/onboarding/business?step=account-details");
   }
   return (
     <div className="w-full">
-      <h3 className=" text-xl text-blue-15 text-center mb-3">Business Profile</h3>
+      <div className=" relative">
+        <BackButton onClick={() => router.back()} className="absolute left-0" />
+        <h3 className=" text-xl text-blue-15 text-center mb-3">Company Profile</h3>
+      </div>
       <div className="rounded-lg border border-gray-95 p-5  bg-white">
         <div className="flex  justify-center pt-5">
           <ProfilePicker
@@ -168,7 +174,7 @@ const OnboardingProfileForm = (props: { onSubmit: () => void }) => {
             />
           </div>
           <div className="col-span-2">
-            <FormSubmit onClick={form.handleSubmit(onSubmit)} text="Complete User Profile" />
+            <FormSubmit onClick={form.handleSubmit(onSubmit)} text="Complete Company Profile" />
           </div>
         </div>
       </div>

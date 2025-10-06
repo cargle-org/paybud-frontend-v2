@@ -5,6 +5,7 @@ import settingsService from "@/services/settings.service";
 import { useBaseStore } from "@/store/hook";
 import { ICreateBusinessDTO } from "@/types/business";
 import { zodResolver } from "@hookform/resolvers/zod";
+import BackButton from "@repo/ui/extra/back-button";
 import FormSelect from "@repo/ui/form/select";
 import FormSubmit from "@repo/ui/form/submit";
 import FormText from "@repo/ui/form/text";
@@ -90,7 +91,10 @@ const OnboardingAccountDetailsForm = () => {
 
   return (
     <div className="w-full">
-      <h3 className=" text-xl text-blue-15 text-center mb-3">Business Account Details</h3>
+      <div className=" relative">
+        <BackButton onClick={() => router.back()} className="absolute left-0" />
+        <h3 className=" text-xl text-blue-15 text-center mb-3">User Profile</h3>
+      </div>
       <div className="rounded-lg border border-gray-95 p-5  bg-white">
         <div className=" grid grid-cols-2">
           <div className=" col-span-2">
@@ -137,7 +141,7 @@ const OnboardingAccountDetailsForm = () => {
           </div>
 
           <div className="col-span-2">
-            <FormSubmit onClick={form.handleSubmit(onSubmit)} text="Complete User Profile" />
+            <FormSubmit onClick={form.handleSubmit(onSubmit)} text="Complete Company Account Details" />
           </div>
         </div>
       </div>

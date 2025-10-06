@@ -5,23 +5,31 @@ import React, { useEffect, useState } from "react";
 
 const OnboardingSuccessPage = () => {
   const [status, setStatus] = useState<"success" | "error" | "loading">("loading");
-  const { popupNotification, user, clearNotifications } = useBaseStore((store) => store);
+  const { notifications, user, clearNotifications, clearOnboardingDetails } = useBaseStore((store) => store);
+
   useEffect(() => {
-    if (!popupNotification) return;
-    if (popupNotification?.action === "business-registration:failed") {
+    notificationService.getNotifications({ userId: user?.id!, isRead: true });
+  }, []);
+
+  useEffect(() => {
+    console.log({ notifications });
+    const businessRegistrationNotification = notifications?.find((n) => n.action.startsWith("business-registration"));
+    if (!businessRegistrationNotification) return;
+    if (businessRegistrationNotification?.action === "business-registration:failed") {
       setStatus("error");
     }
-    if (popupNotification?.action === "business-registration:success") {
+    if (businessRegistrationNotification?.action === "business-registration:success") {
       setStatus("success");
+      clearOnboardingDetails();
     }
     notificationService.readNotification({
       userId: user?.id!,
-      notificationId: popupNotification.id,
+      notificationId: businessRegistrationNotification.id,
     });
     return () => {
       clearNotifications();
     };
-  }, [popupNotification, user]);
+  }, [notifications]);
 
   if (status === "success") {
     return <div className="">Business creation successfull</div>;

@@ -23,6 +23,7 @@ export interface IOnboardingSlice {
     accountDetails: Partial<Pick<ICreateBusinessDTO, "businessAccountName" | "businessAccountNumber" | "businessBVN" | "businessBankCode">>
   ) => void;
   setStage: (stage: "user" | "business" | "success") => void;
+  clearOnboardingDetails: () => void;
 }
 
 export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnboardingSlice> = (set, get) => ({
@@ -85,4 +86,15 @@ export const createOnboardingSlice: StateCreator<IOnboardingSlice, [], [], IOnbo
       },
     }));
   },
+  clearOnboardingDetails: () =>
+    set(() => ({
+      onboardingDetails: {
+        user: {},
+        business: {
+          profile: {},
+          accountDetails: {},
+        },
+        stage: "user",
+      },
+    })),
 });

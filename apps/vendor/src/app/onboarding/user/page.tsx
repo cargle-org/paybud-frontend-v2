@@ -22,6 +22,7 @@ import userService from "@/services/user.service";
 import { IUpdateUserPayload } from "@/types/user";
 import { AxiosError } from "axios";
 import { useRouter } from "nextjs-toploader/app";
+import BackButton from "@repo/ui/extra/back-button";
 
 const onboardingUserSchema = z.object({
   profilePicture: z
@@ -46,7 +47,6 @@ const OnboardingUserPage = () => {
   const queryClient = useQueryClient();
   const { openToast } = useToast();
   const { onboardingDetails, user, setUserProfile, setStage } = useBaseStore((state) => state);
-
   useEffect(() => {
     setStage("user");
   }, []);
@@ -112,7 +112,11 @@ const OnboardingUserPage = () => {
 
   return (
     <div className=" w-full">
-      <h3 className=" text-xl text-blue-15 text-center mb-3">User Profile</h3>
+      <div className=" relative">
+        <BackButton onClick={() => router.back()} className="absolute left-0" />
+        <h3 className=" text-xl text-blue-15 text-center mb-3">User Profile</h3>
+      </div>
+
       <div className="rounded-lg border border-gray-95 p-5  bg-white">
         <div className="flex  justify-center pt-5">
           <ProfilePicker
